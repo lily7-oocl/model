@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行程详情 - 私途</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="itinerary.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- 引入Leaflet地图库 -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-route"></i>
+                <span>私途</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="plan.html" class="nav-link">
+                    <i class="fas fa-robot"></i>
+                    <span>AI规划</span>
+                </a>
+                <a href="itinerary.html" class="nav-link active">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>行程</span>
+                </a>
+                <a href="forum.html" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>论坛</span>
+                </a>
+                <a href="profile.html" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    <span>我的</span>
+                </a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-login" onclick="showLoginModal()">登录</button>
+                <button class="btn-register" onclick="showRegisterModal()">注册</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 行程头部信息 -->
+        <section class="itinerary-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="trip-info">
+                        <h1 id="tripTitle">北京三日游</h1>
+                        <div class="trip-meta">
+                            <span class="trip-date">
+                                <i class="fas fa-calendar"></i>
+                                <span id="tripDateRange">2024-01-15 至 2024-01-17</span>
+                            </span>
+                            <span class="trip-duration">
+                                <i class="fas fa-clock"></i>
+                                <span id="tripDuration">3天2夜</span>
+                            </span>
+                            <span class="trip-people">
+                                <i class="fas fa-users"></i>
+                                <span id="tripPeople">2人</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="trip-actions">
+                        <button class="btn-action" onclick="shareItinerary()">
+                            <i class="fas fa-share"></i>
+                            分享
+                        </button>
+                        <button class="btn-action" onclick="editItinerary()">
+                            <i class="fas fa-edit"></i>
+                            编辑
+                        </button>
+                        <button class="btn-action" onclick="downloadItinerary()">
+                            <i class="fas fa-download"></i>
+                            下载
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 主要内容区域 -->
+        <section class="itinerary-content">
+            <div class="container">
+                <div class="content-layout">
+                    <!-- 左侧：时间轴 -->
+                    <div class="timeline-panel">
+                        <div class="panel-header">
+                            <h2>行程安排</h2>
+                            <div class="timeline-controls">
+                                <button class="btn-control" onclick="toggleTimelineView()">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                                <button class="btn-control" onclick="expandAllDays()">
+                                    <i class="fas fa-expand-arrows-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-container">
+                            <div class="timeline">
+                                <!-- 第1天 -->
+                                <div class="timeline-day active" data-day="1">
+                                    <div class="day-header" onclick="toggleDay(1)">
+                                        <div class="day-info">
+                                            <span class="day-number">第1天</span>
+                                            <span class="day-date">2024-01-15</span>
+                                        </div>
+                                        <div class="day-summary">
+                                            <span class="day-title">天安门广场 → 故宫博物院 → 景山公园</span>
+                                            <span class="day-duration">8小时</span>
+                                        </div>
+                                        <i class="fas fa-chevron-down day-toggle"></i>
+                                    </div>
+                                    
+                                    <div class="day-content">
+                                        <div class="timeline-item" data-attraction="天安门广场">
+                                            <div class="item-time">09:00</div>
+                                            <div class="item-marker">
+                                                <div class="marker-dot"></div>
+                                                <div class="marker-line"></div>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="item-title">天安门广场</div>
+                                                <div class="item-description">参观天安门广场，感受首都的庄严</div>
+                                                <div class="item-duration">预计停留：1小时</div>
+                                                <div class="item-actions">
+                                                    <button class="btn-small" onclick="viewAttractionDetails('天安门广场')">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        详情
+                                                    </button>
+                                                    <button class="btn-small" onclick="navigateToAttraction('天安门广场')">
+                                                        <i class="fas fa-directions"></i>
+                                                        导航
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-item" data-attraction="故宫博物院">
+                                            <div class="item-time">10:30</div>
+                                            <div class="item-marker">
+                                                <div class="marker-dot"></div>
+                                                <div class="marker-line"></div>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="item-title">故宫博物院</div>
+                                                <div class="item-description">探索明清两朝的皇家宫殿</div>
+                                                <div class="item-duration">预计停留：3小时</div>
+                                                <div class="item-actions">
+                                                    <button class="btn-small" onclick="viewAttractionDetails('故宫博物院')">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        详情
+                                                    </button>
+                                                    <button class="btn-small" onclick="navigateToAttraction('故宫博物院')">
+                                                        <i class="fas fa-directions"></i>
+                                                        导航
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-item" data-attraction="景山公园">
+                                            <div class="item-time">14:00</div>
+                                            <div class="item-marker">
+                                                <div class="marker-dot"></div>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="item-title">景山公园</div>
+                                                <div class="item-description">登高俯瞰故宫全景</div>
+                                                <div class="item-duration">预计停留：1小时</div>
+                                                <div class="item-actions">
+                                                    <button class="btn-small" onclick="viewAttractionDetails('景山公园')">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        详情
+                                                    </button>
+                                                    <button class="btn-small" onclick="navigateToAttraction('景山公园')">
+                                                        <i class="fas fa-directions"></i>
+                                                        导航
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 第2天 -->
+                                <div class="timeline-day" data-day="2">
+                                    <div class="day-header" onclick="toggleDay(2)">
+                                        <div class="day-info">
+                                            <span class="day-number">第2天</span>
+                                            <span class="day-date">2024-01-16</span>
+                                        </div>
+                                        <div class="day-summary">
+                                            <span class="day-title">天坛公园 → 前门大街 → 王府井</span>
+                                            <span class="day-duration">7小时</span>
+                                        </div>
+                                        <i class="fas fa-chevron-down day-toggle"></i>
+                                    </div>
+                                    
+                                    <div class="day-content">
+                                        <div class="timeline-item" data-attraction="天坛公园">
+                                            <div class="item-time">09:00</div>
+                                            <div class="item-marker">
+                                                <div class="marker-dot"></div>
+                                                <div class="marker-line"></div>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="item-title">天坛公园</div>
+                                                <div class="item-description">参观明清皇帝祭天的场所</div>
+                                                <div class="item-duration">预计停留：2小时</div>
+                                                <div class="item-actions">
+                                                    <button class="btn-small" onclick="viewAttractionDetails('天坛公园')">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        详情
+                                                    </button>
+                                                    <button class="btn-small" onclick="navigateToAttraction('天坛公园')">
+                                                        <i class="fas fa-directions"></i>
+                                                        导航
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-item" data-attraction="前门大街">
+                                            <div class="item-time">12:00</div>
+                                            <div class="item-marker">
+                                                <div class="marker-dot"></div>
+                                                <div class="marker-line"></div>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="item-title">前门大街</div>
+                                                <div class="item-description">体验老北京商业街的历史韵味</div>
+                                                <div class="item-duration">预计停留：2小时</div>
+                                                <div class="item-actions">
+                                                    <button class="btn-small" onclick="viewAttractionDetails('前门大街')">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        详情
+                                                    </button>
+                                                    <button class="btn-small" onclick="navigateToAttraction('前门大街')">
+                                                        <i class="fas fa-directions"></i>
+                                                        导航
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-item" data-attraction="王府井">
+                                            <div class="item-time">15:00</div>
+                                            <div class="item-marker">
+                                                <div class="marker-dot"></div>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="item-title">王府井</div>
+                                                <div class="item-description">购物和品尝北京小吃</div>
+                                                <div class="item-duration">预计停留：3小时</div>
+                                                <div class="item-actions">
+                                                    <button class="btn-small" onclick="viewAttractionDetails('王府井')">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        详情
+                                                    </button>
+                                                    <button class="btn-small" onclick="navigateToAttraction('王府井')">
+                                                        <i class="fas fa-directions"></i>
+                                                        导航
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 第3天 -->
+                                <div class="timeline-day" data-day="3">
+                                    <div class="day-header" onclick="toggleDay(3)">
+                                        <div class="day-info">
+                                            <span class="day-number">第3天</span>
+                                            <span class="day-date">2024-01-17</span>
+                                        </div>
+                                        <div class="day-summary">
+                                            <span class="day-title">颐和园 → 圆明园</span>
+                                            <span class="day-duration">6小时</span>
+                                        </div>
+                                        <i class="fas fa-chevron-down day-toggle"></i>
+                                    </div>
+                                    
+                                    <div class="day-content">
+                                        <div class="timeline-item" data-attraction="颐和园">
+                                            <div class="item-time">09:00</div>
+                                            <div class="item-marker">
+                                                <div class="marker-dot"></div>
+                                                <div class="marker-line"></div>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="item-title">颐和园</div>
+                                                <div class="item-description">游览中国古典园林之首</div>
+                                                <div class="item-duration">预计停留：3小时</div>
+                                                <div class="item-actions">
+                                                    <button class="btn-small" onclick="viewAttractionDetails('颐和园')">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        详情
+                                                    </button>
+                                                    <button class="btn-small" onclick="navigateToAttraction('颐和园')">
+                                                        <i class="fas fa-directions"></i>
+                                                        导航
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-item" data-attraction="圆明园">
+                                            <div class="item-time">13:00</div>
+                                            <div class="item-marker">
+                                                <div class="marker-dot"></div>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="item-title">圆明园</div>
+                                                <div class="item-description">参观万园之园的遗址</div>
+                                                <div class="item-duration">预计停留：3小时</div>
+                                                <div class="item-actions">
+                                                    <button class="btn-small" onclick="viewAttractionDetails('圆明园')">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        详情
+                                                    </button>
+                                                    <button class="btn-small" onclick="navigateToAttraction('圆明园')">
+                                                        <i class="fas fa-directions"></i>
+                                                        导航
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧：地图 -->
+                    <div class="map-panel">
+                        <div class="panel-header">
+                            <h2>路线地图</h2>
+                            <div class="map-controls">
+                                <button class="btn-control" onclick="toggleMapView()">
+                                    <i class="fas fa-map"></i>
+                                </button>
+                                <button class="btn-control" onclick="centerMap()">
+                                    <i class="fas fa-crosshairs"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="map-container">
+                            <div id="map"></div>
+                        </div>
+                        
+                        <!-- 景点详情卡片 -->
+                        <div class="attraction-details" id="attractionDetails">
+                            <div class="details-header">
+                                <h3 id="attractionName">天安门广场</h3>
+                                <button class="close-details" onclick="closeAttractionDetails()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="details-content">
+                                <div class="attraction-image">
+                                    <img id="attractionImage" src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=400&h=200&fit=crop" alt="景点图片">
+                                </div>
+                                <div class="attraction-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-star"></i>
+                                        <span>评分：4.8/5.0</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>建议游览时间：1-2小时</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-ticket-alt"></i>
+                                        <span>门票：免费</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>地址：北京市东城区东长安街</span>
+                                    </div>
+                                </div>
+                                <div class="attraction-description">
+                                    <p id="attractionDescription">天安门广场是北京市中心的一个大型城市广场，位于天安门城楼前。广场北起天安门，南至正阳门，东起中国国家博物馆，西至人民大会堂，南北长880米，东西宽500米，面积达44万平方米，可容纳100万人举行盛大集会。</p>
+                                </div>
+                                <div class="attraction-actions">
+                                    <button class="btn-primary" onclick="navigateToAttraction()">
+                                        <i class="fas fa-directions"></i>
+                                        导航前往
+                                    </button>
+                                    <button class="btn-secondary" onclick="addToFavorites()">
+                                        <i class="fas fa-heart"></i>
+                                        收藏
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 登录模态框 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>登录私途</h2>
+                <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="auth-form">
+                    <div class="form-group">
+                        <label>手机号/邮箱</label>
+                        <input type="text" placeholder="请输入手机号或邮箱">
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" placeholder="请输入密码">
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>记住我</span>
+                        </label>
+                        <a href="#" class="forgot-password">忘记密码？</a>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">登录</button>
+                </form>
+                <div class="auth-divider">
+                    <span>或</span>
+                </div>
+                <div class="social-login">
+                    <button class="btn-social wechat">
+                        <i class="fab fa-weixin"></i>
+                        微信登录
+                    </button>
+                    <button class="btn-social qq">
+                        <i class="fab fa-qq"></i>
+                        QQ登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>注册私途</h2>
+                <button class="close-btn" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="auth-form">
+                    <div class="form-group">
+                        <label>手机号</label>
+                        <input type="tel" placeholder="请输入手机号">
+                    </div>
+                    <div class="form-group">
+                        <label>验证码</label>
+                        <div class="verification-group">
+                            <input type="text" placeholder="请输入验证码">
+                            <button type="button" class="btn-verification">获取验证码</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>设置密码</label>
+                        <input type="password" placeholder="请设置密码">
+                    </div>
+                    <div class="form-group">
+                        <label>确认密码</label>
+                        <input type="password" placeholder="请再次输入密码">
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>我已阅读并同意<a href="#">《用户协议》</a>和<a href="#">《隐私政策》</a></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">注册</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="itinerary.js"></script>
+</body>
+</html>

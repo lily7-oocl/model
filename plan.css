@@ -1,0 +1,690 @@
+/* AI规划页面专用样式 */
+
+.planning-section {
+    padding: 40px 20px;
+    min-height: calc(100vh - 70px);
+    background: linear-gradient(135deg, rgba(61, 178, 255, 0.05) 0%, rgba(255, 189, 57, 0.05) 100%);
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 步骤指示器 */
+.steps-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e1e5e9;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-number {
+    background: #3DB2FF;
+    color: white;
+    transform: scale(1.1);
+}
+
+.step.completed .step-number {
+    background: #4CAF50;
+    color: white;
+}
+
+.step.completed .step-number::after {
+    content: '✓';
+    font-size: 18px;
+}
+
+.step-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+.step.active .step-label {
+    color: #3DB2FF;
+    font-weight: 600;
+}
+
+.step-line {
+    width: 60px;
+    height: 2px;
+    background: #e1e5e9;
+    margin: 0 20px;
+    transition: all 0.3s ease;
+}
+
+.step.completed + .step-line {
+    background: #4CAF50;
+}
+
+/* 步骤内容 */
+.step-content {
+    display: none;
+    animation: fadeInUp 0.5s ease;
+}
+
+.step-content.active {
+    display: block;
+}
+
+.step-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.step-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.step-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* 表单卡片 */
+.form-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 目的地输入 */
+.destination-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.destination-input input {
+    flex: 1;
+    padding-right: 50px;
+}
+
+.btn-location {
+    position: absolute;
+    right: 12px;
+    background: #3DB2FF;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-location:hover {
+    background: #2A9BFF;
+    transform: scale(1.05);
+}
+
+/* 天数选择器 */
+.days-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.day-btn {
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    text-align: center;
+}
+
+.day-btn:hover,
+.day-btn.active {
+    background: #3DB2FF;
+    color: white;
+    border-color: #3DB2FF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(61, 178, 255, 0.3);
+}
+
+/* 人数选择器 */
+.people-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    padding: 12px 20px;
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.people-btn {
+    background: #3DB2FF;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.people-btn:hover {
+    background: #2A9BFF;
+    transform: scale(1.1);
+}
+
+.people-count {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    min-width: 30px;
+    text-align: center;
+}
+
+/* 偏好设置网格 */
+.preferences-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.preference-category {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.preference-category h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.preference-tags {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.preference-tag {
+    display: block;
+    cursor: pointer;
+}
+
+.preference-tag input[type="checkbox"] {
+    display: none;
+}
+
+.tag-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.preference-tag input[type="checkbox"]:checked + .tag-content {
+    background: #3DB2FF;
+    color: white;
+    border-color: #3DB2FF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(61, 178, 255, 0.3);
+}
+
+.tag-content i {
+    font-size: 16px;
+}
+
+/* 预算选择器 */
+.budget-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.budget-option {
+    display: block;
+    cursor: pointer;
+}
+
+.budget-option input[type="radio"] {
+    display: none;
+}
+
+.budget-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.budget-option input[type="radio"]:checked + .budget-content {
+    background: #3DB2FF;
+    color: white;
+    border-color: #3DB2FF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(61, 178, 255, 0.3);
+}
+
+.budget-content i {
+    font-size: 20px;
+}
+
+.budget-content strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.budget-content small {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* 步骤操作按钮 */
+.step-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    gap: 16px;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.8);
+    color: #666;
+    border: 2px solid #e1e5e9;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-secondary:hover {
+    background: #f8f9fa;
+    border-color: #3DB2FF;
+    color: #3DB2FF;
+}
+
+/* AI生成动画 */
+.ai-generating {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.ai-animation {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 40px;
+}
+
+.ai-brain {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #3DB2FF 0%, #2A9BFF 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: white;
+    animation: pulse 2s infinite;
+    position: relative;
+    z-index: 2;
+}
+
+.ai-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #FFBD39;
+    border-radius: 50%;
+    animation: orbit 3s linear infinite;
+}
+
+.particle:nth-child(1) {
+    animation-delay: 0s;
+    animation-duration: 3s;
+}
+
+.particle:nth-child(2) {
+    animation-delay: 0.6s;
+    animation-duration: 3.5s;
+}
+
+.particle:nth-child(3) {
+    animation-delay: 1.2s;
+    animation-duration: 4s;
+}
+
+.particle:nth-child(4) {
+    animation-delay: 1.8s;
+    animation-duration: 3.2s;
+}
+
+.particle:nth-child(5) {
+    animation-delay: 2.4s;
+    animation-duration: 3.8s;
+}
+
+.ai-status {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+    animation: fadeInOut 2s infinite;
+}
+
+.progress-bar {
+    width: 300px;
+    height: 6px;
+    background: #e1e5e9;
+    border-radius: 3px;
+    margin: 0 auto 40px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3DB2FF 0%, #FFBD39 100%);
+    border-radius: 3px;
+    animation: progress 3s ease-in-out infinite;
+}
+
+.ai-tips {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.tip-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 14px;
+    animation: fadeInUp 0.5s ease;
+}
+
+.tip-item i {
+    color: #3DB2FF;
+    font-size: 16px;
+}
+
+/* 行程预览 */
+.itinerary-preview {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.itinerary-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.summary-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.summary-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.summary-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+.info-item i {
+    color: #3DB2FF;
+    width: 16px;
+}
+
+.daily-schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.day-item {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.day-number {
+    font-weight: 600;
+    color: #3DB2FF;
+}
+
+.day-date {
+    font-size: 12px;
+    color: #999;
+}
+
+.day-attractions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.attraction {
+    background: #3DB2FF;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.itinerary-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+/* 动画 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes orbit {
+    0% {
+        transform: rotate(0deg) translateX(60px) rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg) translateX(60px) rotate(-360deg);
+    }
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes progress {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .steps-indicator {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .step-line {
+        width: 2px;
+        height: 30px;
+        margin: 0;
+    }
+    
+    .form-card {
+        padding: 24px;
+    }
+    
+    .days-selector {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .preference-tags {
+        grid-template-columns: 1fr;
+    }
+    
+    .itinerary-summary {
+        grid-template-columns: 1fr;
+    }
+    
+    .step-actions {
+        flex-direction: column;
+    }
+    
+    .ai-tips {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .progress-bar {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .planning-section {
+        padding: 20px 10px;
+    }
+    
+    .step-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .days-selector {
+        grid-template-columns: 1fr;
+    }
+    
+    .budget-selector {
+        gap: 8px;
+    }
+    
+    .budget-content {
+        padding: 12px;
+    }
+}

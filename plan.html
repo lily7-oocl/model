@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能规划 - 私途</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="plan.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-route"></i>
+                <span>私途</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="plan.html" class="nav-link active">
+                    <i class="fas fa-robot"></i>
+                    <span>AI规划</span>
+                </a>
+                <a href="itinerary.html" class="nav-link">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>行程</span>
+                </a>
+                <a href="forum.html" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>论坛</span>
+                </a>
+                <a href="profile.html" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    <span>我的</span>
+                </a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-login" onclick="showLoginModal()">登录</button>
+                <button class="btn-register" onclick="showRegisterModal()">注册</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- AI规划流程 -->
+        <section class="planning-section">
+            <div class="container">
+                <!-- 步骤指示器 -->
+                <div class="steps-indicator">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">基本信息</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">偏好设置</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">AI生成</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">确认行程</div>
+                    </div>
+                </div>
+
+                <!-- 步骤1：基本信息 -->
+                <div class="step-content active" id="step1">
+                    <div class="step-header">
+                        <h2>告诉我们您的旅行计划</h2>
+                        <p>AI将根据您的需求为您量身定制完美行程</p>
+                    </div>
+                    
+                    <div class="form-card">
+                        <div class="form-group">
+                            <label>目的地</label>
+                            <div class="destination-input">
+                                <input type="text" id="destination" placeholder="请输入目的地，如：北京、上海、杭州" value="">
+                                <button class="btn-location" onclick="getCurrentLocation()">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>出发日期</label>
+                            <input type="date" id="startDate" min="">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>旅行天数</label>
+                            <div class="days-selector">
+                                <button class="day-btn" data-days="1">1天</button>
+                                <button class="day-btn" data-days="2">2天</button>
+                                <button class="day-btn active" data-days="3">3天</button>
+                                <button class="day-btn" data-days="5">5天</button>
+                                <button class="day-btn" data-days="7">7天</button>
+                                <button class="day-btn" data-days="10">10天</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>旅行人数</label>
+                            <div class="people-selector">
+                                <button class="people-btn" onclick="changePeople(-1)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="people-count">2</span>
+                                <button class="people-btn" onclick="changePeople(1)">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-primary" onclick="nextStep()">
+                            下一步
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 步骤2：偏好设置 -->
+                <div class="step-content" id="step2">
+                    <div class="step-header">
+                        <h2>选择您的旅行偏好</h2>
+                        <p>帮助我们更好地了解您的兴趣，为您推荐最合适的景点</p>
+                    </div>
+                    
+                    <div class="preferences-grid">
+                        <div class="preference-category">
+                            <h3>景点类型</h3>
+                            <div class="preference-tags">
+                                <label class="preference-tag">
+                                    <input type="checkbox" value="文化古迹">
+                                    <span class="tag-content">
+                                        <i class="fas fa-landmark"></i>
+                                        文化古迹
+                                    </span>
+                                </label>
+                                <label class="preference-tag">
+                                    <input type="checkbox" value="自然风光">
+                                    <span class="tag-content">
+                                        <i class="fas fa-mountain"></i>
+                                        自然风光
+                                    </span>
+                                </label>
+                                <label class="preference-tag">
+                                    <input type="checkbox" value="现代建筑">
+                                    <span class="tag-content">
+                                        <i class="fas fa-building"></i>
+                                        现代建筑
+                                    </span>
+                                </label>
+                                <label class="preference-tag">
+                                    <input type="checkbox" value="主题公园">
+                                    <span class="tag-content">
+                                        <i class="fas fa-theater-masks"></i>
+                                        主题公园
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="preference-category">
+                            <h3>活动偏好</h3>
+                            <div class="preference-tags">
+                                <label class="preference-tag">
+                                    <input type="checkbox" value="美食体验">
+                                    <span class="tag-content">
+                                        <i class="fas fa-utensils"></i>
+                                        美食体验
+                                    </span>
+                                </label>
+                                <label class="preference-tag">
+                                    <input type="checkbox" value="购物娱乐">
+                                    <span class="tag-content">
+                                        <i class="fas fa-shopping-bag"></i>
+                                        购物娱乐
+                                    </span>
+                                </label>
+                                <label class="preference-tag">
+                                    <input type="checkbox" value="户外运动">
+                                    <span class="tag-content">
+                                        <i class="fas fa-hiking"></i>
+                                        户外运动
+                                    </span>
+                                </label>
+                                <label class="preference-tag">
+                                    <input type="checkbox" value="艺术展览">
+                                    <span class="tag-content">
+                                        <i class="fas fa-palette"></i>
+                                        艺术展览
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="preference-category">
+                            <h3>预算范围</h3>
+                            <div class="budget-selector">
+                                <label class="budget-option">
+                                    <input type="radio" name="budget" value="经济型">
+                                    <span class="budget-content">
+                                        <i class="fas fa-wallet"></i>
+                                        <div>
+                                            <strong>经济型</strong>
+                                            <small>500-1000元/天</small>
+                                        </div>
+                                    </span>
+                                </label>
+                                <label class="budget-option">
+                                    <input type="radio" name="budget" value="舒适型">
+                                    <span class="budget-content">
+                                        <i class="fas fa-star"></i>
+                                        <div>
+                                            <strong>舒适型</strong>
+                                            <small>1000-2000元/天</small>
+                                        </div>
+                                    </span>
+                                </label>
+                                <label class="budget-option">
+                                    <input type="radio" name="budget" value="豪华型">
+                                    <span class="budget-content">
+                                        <i class="fas fa-crown"></i>
+                                        <div>
+                                            <strong>豪华型</strong>
+                                            <small>2000元+/天</small>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button class="btn-secondary" onclick="prevStep()">
+                            <i class="fas fa-arrow-left"></i>
+                            上一步
+                        </button>
+                        <button class="btn-primary" onclick="nextStep()">
+                            开始AI规划
+                            <i class="fas fa-robot"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 步骤3：AI生成 -->
+                <div class="step-content" id="step3">
+                    <div class="ai-generating">
+                        <div class="ai-animation">
+                            <div class="ai-brain">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="ai-particles">
+                                <div class="particle"></div>
+                                <div class="particle"></div>
+                                <div class="particle"></div>
+                                <div class="particle"></div>
+                                <div class="particle"></div>
+                            </div>
+                        </div>
+                        
+                        <h2>AI正在为您规划行程</h2>
+                        <p class="ai-status">正在分析您的偏好和目的地信息...</p>
+                        
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        
+                        <div class="ai-tips">
+                            <div class="tip-item">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>正在为您匹配最佳景点</span>
+                            </div>
+                            <div class="tip-item">
+                                <i class="fas fa-route"></i>
+                                <span>优化路线规划</span>
+                            </div>
+                            <div class="tip-item">
+                                <i class="fas fa-clock"></i>
+                                <span>安排最佳时间</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 步骤4：确认行程 -->
+                <div class="step-content" id="step4">
+                    <div class="step-header">
+                        <h2>您的专属行程已生成</h2>
+                        <p>AI为您精心规划的个性化行程，点击查看详情</p>
+                    </div>
+                    
+                    <div class="itinerary-preview">
+                        <div class="itinerary-summary">
+                            <div class="summary-card">
+                                <h3>行程概览</h3>
+                                <div class="summary-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>目的地：<strong id="summaryDestination">北京</strong></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>天数：<strong id="summaryDays">3天</strong></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-users"></i>
+                                        <span>人数：<strong id="summaryPeople">2人</strong></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-wallet"></i>
+                                        <span>预算：<strong id="summaryBudget">舒适型</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-card">
+                                <h3>每日安排</h3>
+                                <div class="daily-schedule">
+                                    <div class="day-item">
+                                        <div class="day-header">
+                                            <span class="day-number">第1天</span>
+                                            <span class="day-date">2024-01-15</span>
+                                        </div>
+                                        <div class="day-attractions">
+                                            <span class="attraction">天安门广场</span>
+                                            <span class="attraction">故宫博物院</span>
+                                            <span class="attraction">景山公园</span>
+                                        </div>
+                                    </div>
+                                    <div class="day-item">
+                                        <div class="day-header">
+                                            <span class="day-number">第2天</span>
+                                            <span class="day-date">2024-01-16</span>
+                                        </div>
+                                        <div class="day-attractions">
+                                            <span class="attraction">天坛公园</span>
+                                            <span class="attraction">前门大街</span>
+                                            <span class="attraction">王府井</span>
+                                        </div>
+                                    </div>
+                                    <div class="day-item">
+                                        <div class="day-header">
+                                            <span class="day-number">第3天</span>
+                                            <span class="day-date">2024-01-17</span>
+                                        </div>
+                                        <div class="day-attractions">
+                                            <span class="attraction">颐和园</span>
+                                            <span class="attraction">圆明园</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="itinerary-actions">
+                            <button class="btn-secondary" onclick="regenerateItinerary()">
+                                <i class="fas fa-redo"></i>
+                                重新生成
+                            </button>
+                            <button class="btn-primary" onclick="viewFullItinerary()">
+                                <i class="fas fa-eye"></i>
+                                查看完整行程
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 登录模态框 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>登录私途</h2>
+                <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="auth-form">
+                    <div class="form-group">
+                        <label>手机号/邮箱</label>
+                        <input type="text" placeholder="请输入手机号或邮箱">
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" placeholder="请输入密码">
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>记住我</span>
+                        </label>
+                        <a href="#" class="forgot-password">忘记密码？</a>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">登录</button>
+                </form>
+                <div class="auth-divider">
+                    <span>或</span>
+                </div>
+                <div class="social-login">
+                    <button class="btn-social wechat">
+                        <i class="fab fa-weixin"></i>
+                        微信登录
+                    </button>
+                    <button class="btn-social qq">
+                        <i class="fab fa-qq"></i>
+                        QQ登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>注册私途</h2>
+                <button class="close-btn" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="auth-form">
+                    <div class="form-group">
+                        <label>手机号</label>
+                        <input type="tel" placeholder="请输入手机号">
+                    </div>
+                    <div class="form-group">
+                        <label>验证码</label>
+                        <div class="verification-group">
+                            <input type="text" placeholder="请输入验证码">
+                            <button type="button" class="btn-verification">获取验证码</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>设置密码</label>
+                        <input type="password" placeholder="请设置密码">
+                    </div>
+                    <div class="form-group">
+                        <label>确认密码</label>
+                        <input type="password" placeholder="请再次输入密码">
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>我已阅读并同意<a href="#">《用户协议》</a>和<a href="#">《隐私政策》</a></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">注册</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="plan.js"></script>
+</body>
+</html>
