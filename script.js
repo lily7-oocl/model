@@ -1,6 +1,6 @@
 // 全局变量
 let currentUser = null;
-let selectedPreferences = ['文化古迹'];
+let selectedPreferences = ['culture'];
 let selectedDays = 3;
 
 // 页面加载完成后初始化
@@ -24,6 +24,12 @@ function initializeApp() {
     
     // 检查用户登录状态
     checkUserStatus();
+
+    // 初始化收藏功能
+    initializeFavorites();
+
+    // 初始化分享互动
+    initializeShareInteractions();
 }
 
 // 初始化导航栏
@@ -41,35 +47,44 @@ function initializeNavigation() {
 
 // 初始化偏好选择
 function initializePreferences() {
-    const tags = document.querySelectorAll('.tag');
-    tags.forEach(tag => {
-        tag.addEventListener('click', function() {
-            // 如果是多选模式，可以同时选择多个
-            if (this.classList.contains('active')) {
-                this.classList.remove('active');
-                selectedPreferences = selectedPreferences.filter(p => p !== this.textContent);
-            } else {
-                this.classList.add('active');
-                selectedPreferences.push(this.textContent);
-            }
-            
-            // 更新UI反馈
-            updatePreferenceSelection();
+    const preferenceItems = document.querySelectorAll('.preference-item');
+    preferenceItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // 移除其他项的active状态
+            preferenceItems.forEach(p => p.classList.remove('active'));
+            // 添加当前项的active状态
+            this.classList.add('active');
+
+            // 更新选中的偏好
+            selectedPreferences = [this.getAttribute('data-type')];
+
+            // 添加点击反馈动画
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
         });
     });
 }
 
 // 初始化天数选择
 function initializeDaysSelector() {
-    const dayBtns = document.querySelectorAll('.day-btn');
-    dayBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // 移除其他按钮的active状态
-            dayBtns.forEach(b => b.classList.remove('active'));
-            // 添加当前按钮的active状态
+    const dayOptions = document.querySelectorAll('.day-option');
+    dayOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // 移除其他选项的active状态
+            dayOptions.forEach(d => d.classList.remove('active'));
+            // 添加当前选项的active状态
             this.classList.add('active');
+
             // 更新选中的天数
-            selectedDays = parseInt(this.textContent);
+            selectedDays = parseInt(this.getAttribute('data-days'));
+
+            // 添加点击反馈动画
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
         });
     });
 }
@@ -88,193 +103,223 @@ function initializeModals() {
     
     // 表单提交处理
     const loginForm = document.querySelector('#loginModal form');
-    const registerForm = document.querySelector('#registerModal form');
-    
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
-    
-    if (registerForm) {
-        registerForm.addEventListener('submit', handleRegister);
+}
+
+// 初始化收藏功能
+function initializeFavorites() {
+    const favoriteButtons = document.querySelectorAll('.favorite-btn');
+    favoriteButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+
+            const icon = this.querySelector('i');
+            if (this.classList.contains('favorited')) {
+                // 取消收藏
+                this.classList.remove('favorited');
+                this.style.background = 'rgba(255, 255, 255, 0.9)';
+                this.style.color = '#666';
+                showNotification('已取消收藏', 'info');
+            } else {
+                // 添加收藏
+                this.classList.add('favorited');
+                this.style.background = '#ff5722';
+                this.style.color = 'white';
+                showNotification('已添加到收藏', 'success');
+
+                // 收藏动画
+                this.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            }
+        });
+    });
+}
+
+// 初始化分享互动
+function initializeShareInteractions() {
+    // 关注按钮
+    const followButtons = document.querySelectorAll('.follow-btn');
+    followButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (this.textContent.trim() === '关注') {
+                this.textContent = '已关注';
+                this.style.background = '#4caf50';
+                showNotification('关注成功', 'success');
+            } else {
+                this.textContent = '关注';
+                this.style.background = '#42a5f5';
+                showNotification('已取消关注', 'info');
+            }
+        });
+    });
+
+    // 互动按钮
+    const actionButtons = document.querySelectorAll('.action-btn');
+    actionButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const icon = this.querySelector('i');
+            const span = this.querySelector('span');
+
+            if (icon.classList.contains('fa-heart')) {
+                // 点赞功能
+                if (this.classList.contains('liked')) {
+                    this.classList.remove('liked');
+                    icon.style.color = '#666';
+                    let count = parseInt(span.textContent.replace(/[^\d]/g, ''));
+                    span.textContent = formatNumber(count - 1);
+                } else {
+                    this.classList.add('liked');
+                    icon.style.color = '#ff5722';
+                    let count = parseInt(span.textContent.replace(/[^\d]/g, ''));
+                    span.textContent = formatNumber(count + 1);
+
+                    // 点赞动画
+                    this.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                }
+            } else if (icon.classList.contains('fa-share')) {
+                // 分享功能
+                showNotification('分享链接已复制到剪贴板', 'success');
+            }
+        });
+    });
+}
+
+// 格式化数字显示
+function formatNumber(num) {
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'k';
     }
+    return num.toString();
+}
+
+// AI规划功能
+function startAIPlanning() {
+    const destination = document.getElementById('destination').value.trim();
+
+    if (!destination) {
+        showNotification('请输入目的地', 'warning');
+        return;
+    }
+
+    if (selectedPreferences.length === 0) {
+        showNotification('请选择旅行偏好', 'warning');
+        return;
+    }
+
+    // 显示加载状态
+    const button = document.querySelector('.ai-plan-btn');
+    const originalContent = button.innerHTML;
+
+    button.innerHTML = `
+        <i class="fas fa-spinner fa-spin"></i>
+        AI正在规划中...
+    `;
+    button.disabled = true;
+
+    // 模拟AI规划过程
+    setTimeout(() => {
+        // 构建跳转URL参数
+        const params = new URLSearchParams({
+            destination: destination,
+            days: selectedDays,
+            preferences: selectedPreferences.join(',')
+        });
+
+        // 跳转到行程页面
+        window.location.href = `itinerary.html?${params.toString()}`;
+    }, 2000);
 }
 
 // 显示登录模态框
 function showLoginModal() {
     const modal = document.getElementById('loginModal');
-    modal.classList.add('show');
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-// 显示注册模态框
-function showRegisterModal() {
-    const modal = document.getElementById('registerModal');
-    modal.classList.add('show');
-    modal.style.display = 'flex';
+    modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 }
 
 // 关闭模态框
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
-    modal.classList.remove('show');
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
-}
-
-// 开始AI规划
-function startAIPlanning() {
-    const destination = document.getElementById('destination').value.trim();
-    
-    if (!destination) {
-        showNotification('请输入目的地', 'error');
-        return;
-    }
-    
-    if (selectedPreferences.length === 0) {
-        showNotification('请选择至少一个旅行偏好', 'error');
-        return;
-    }
-    
-    // 显示加载状态
-    showLoadingState();
-    
-    // 模拟AI规划过程
-    setTimeout(() => {
-        hideLoadingState();
-        // 保存规划数据到localStorage
-        const planningData = {
-            destination: destination,
-            preferences: selectedPreferences,
-            days: selectedDays,
-            startDate: new Date().toISOString().split('T')[0], // 默认今天开始
-            people: 2 // 默认2人
-        };
-        localStorage.setItem('currentItinerary', JSON.stringify(planningData));
-        
-        // 直接跳转到行程页面
-        window.location.href = 'itinerary.html';
-    }, 2000);
-}
-
-// 显示加载状态
-function showLoadingState() {
-    const btn = document.querySelector('.btn-primary');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI正在规划中...';
-    btn.disabled = true;
-    
-    // 保存原始状态以便恢复
-    btn.dataset.originalText = originalText;
-}
-
-// 隐藏加载状态
-function hideLoadingState() {
-    const btn = document.querySelector('.btn-primary');
-    btn.innerHTML = btn.dataset.originalText;
-    btn.disabled = false;
-}
-
-// 更新偏好选择显示
-function updatePreferenceSelection() {
-    console.log('当前选择的偏好:', selectedPreferences);
 }
 
 // 处理登录
 function handleLogin(e) {
     e.preventDefault();
     
-    const formData = new FormData(e.target);
-    const phone = formData.get('phone') || e.target.querySelector('input[type="text"]').value;
-    const password = formData.get('password') || e.target.querySelector('input[type="password"]').value;
-    
+    const phone = e.target.querySelector('input[type="text"]').value;
+    const password = e.target.querySelector('input[type="password"]').value;
+
     if (!phone || !password) {
-        showNotification('请填写完整信息', 'error');
+        showNotification('请填写完整的登录信息', 'warning');
         return;
     }
     
-    // 模拟登录请求
-    showLoadingState();
+    // 模拟登录过程
+    showNotification('登录中...', 'info');
+
     setTimeout(() => {
-        hideLoadingState();
         currentUser = {
             id: 1,
-            name: '用户' + Math.floor(Math.random() * 1000),
+            username: phone,
             avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face'
         };
         
-        updateUserInterface();
+        updateUserStatus();
         closeModal('loginModal');
         showNotification('登录成功！', 'success');
     }, 1500);
 }
 
-// 处理注册
-function handleRegister(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    const phone = formData.get('phone') || e.target.querySelector('input[type="tel"]').value;
-    const verification = formData.get('verification') || e.target.querySelectorAll('input[type="text"]')[1].value;
-    const password = formData.get('password') || e.target.querySelectorAll('input[type="password"]')[0].value;
-    const confirmPassword = formData.get('confirmPassword') || e.target.querySelectorAll('input[type="password"]')[1].value;
-    
-    if (!phone || !verification || !password || !confirmPassword) {
-        showNotification('请填写完整信息', 'error');
-        return;
+// 检查用户登录状态
+function checkUserStatus() {
+    // 从localStorage检查用户状态
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        updateUserStatus();
     }
-    
-    if (password !== confirmPassword) {
-        showNotification('两次输入的密码不一致', 'error');
-        return;
-    }
-    
-    // 模拟注册请求
-    showLoadingState();
-    setTimeout(() => {
-        hideLoadingState();
-        currentUser = {
-            id: 1,
-            name: '新用户' + Math.floor(Math.random() * 1000),
-            avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face'
-        };
-        
-        updateUserInterface();
-        closeModal('registerModal');
-        showNotification('注册成功！', 'success');
-    }, 1500);
 }
 
-// 更新用户界面
-function updateUserInterface() {
+// 更新用户状态显示
+function updateUserStatus() {
     const navActions = document.querySelector('.nav-actions');
+
     if (currentUser) {
         navActions.innerHTML = `
-            <div class="user-menu">
-                <img src="${currentUser.avatar}" alt="用户头像" class="user-avatar-small">
-                <span>${currentUser.name}</span>
+            <div class="user-profile">
+                <img src="${currentUser.avatar}" alt="用户头像" class="user-avatar-nav">
+                <span>${currentUser.username}</span>
                 <button class="btn-logout" onclick="logout()">退出</button>
             </div>
+        `;
+
+        // 保存到localStorage
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    } else {
+        navActions.innerHTML = `
+            <span class="user-info">用户囤p650</span>
+            <button class="btn-register">签到</button>
         `;
     }
 }
 
-// 登出
+// 退出登录
 function logout() {
     currentUser = null;
-    updateUserInterface();
+    localStorage.removeItem('currentUser');
+    updateUserStatus();
     showNotification('已退出登录', 'info');
-}
-
-// 检查用户状态
-function checkUserStatus() {
-    // 这里可以从localStorage或cookie中获取用户信息
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        updateUserInterface();
-    }
 }
 
 // 显示通知
@@ -290,24 +335,36 @@ function showNotification(message, type = 'info') {
     `;
     
     // 添加样式
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${getNotificationColor(type)};
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 3000;
-        animation: slideInRight 0.3s ease;
-    `;
-    
+    Object.assign(notification.style, {
+        position: 'fixed',
+        top: '80px',
+        right: '20px',
+        background: getNotificationColor(type),
+        color: 'white',
+        padding: '16px 20px',
+        borderRadius: '12px',
+        backdropFilter: 'blur(10px)',
+        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)',
+        zIndex: '10000',
+        transform: 'translateX(100%)',
+        transition: 'transform 0.3s ease',
+        fontSize: '14px',
+        fontWeight: '500',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px'
+    });
+
     document.body.appendChild(notification);
     
-    // 3秒后自动移除
+    // 显示动画
     setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+
+    // 自动隐藏
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.parentNode.removeChild(notification);
@@ -320,9 +377,9 @@ function showNotification(message, type = 'info') {
 function getNotificationIcon(type) {
     const icons = {
         success: 'check-circle',
-        error: 'exclamation-circle',
         warning: 'exclamation-triangle',
-        info: 'info-circle'
+        info: 'info-circle',
+        error: 'times-circle'
     };
     return icons[type] || 'info-circle';
 }
@@ -330,145 +387,54 @@ function getNotificationIcon(type) {
 // 获取通知颜色
 function getNotificationColor(type) {
     const colors = {
-        success: '#4CAF50',
-        error: '#f44336',
-        warning: '#ff9800',
-        info: '#2196F3'
+        success: 'rgba(76, 175, 80, 0.9)',
+        warning: 'rgba(255, 193, 7, 0.9)',
+        info: 'rgba(33, 150, 243, 0.9)',
+        error: 'rgba(244, 67, 54, 0.9)'
     };
-    return colors[type] || '#2196F3';
+    return colors[type] || 'rgba(33, 150, 243, 0.9)';
 }
 
-// 添加CSS动画
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(100%);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        to {
-            opacity: 0;
-            transform: translateX(100%);
-        }
-    }
-    
-    .user-menu {
+// 添加用户头像样式
+const additionalStyles = `
+    .user-profile {
         display: flex;
         align-items: center;
         gap: 8px;
+        color: #666;
+        font-size: 14px;
     }
     
-    .user-avatar-small {
-        width: 32px;
-        height: 32px;
+    .user-avatar-nav {
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         object-fit: cover;
     }
     
     .btn-logout {
-        background: #ff6b6b;
+        background: #ff5722;
         color: white;
         border: none;
-        padding: 6px 12px;
-        border-radius: 6px;
-        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
         font-size: 12px;
+        cursor: pointer;
         transition: all 0.3s ease;
     }
     
     .btn-logout:hover {
-        background: #ff5252;
+        background: #f4511e;
+    }
+    
+    .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 `;
-document.head.appendChild(style);
 
-// 景点收藏功能
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.btn-favorite')) {
-        const btn = e.target.closest('.btn-favorite');
-        const isActive = btn.classList.contains('active');
-        
-        if (isActive) {
-            btn.classList.remove('active');
-            btn.style.color = '#666';
-            showNotification('已取消收藏', 'info');
-        } else {
-            btn.classList.add('active');
-            btn.style.color = '#ff6b6b';
-            showNotification('已添加到收藏', 'success');
-        }
-    }
-});
-
-// 帖子互动功能
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.action-btn')) {
-        const btn = e.target.closest('.action-btn');
-        const action = btn.textContent.trim();
-        
-        if (action.includes('关注')) {
-            btn.textContent = '已关注';
-            btn.style.background = '#4CAF50';
-            btn.style.color = 'white';
-            showNotification('关注成功', 'success');
-        } else if (action.includes('分享')) {
-            showNotification('分享链接已复制到剪贴板', 'success');
-        }
-    }
-});
-
-// 平滑滚动
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// 页面滚动时的导航栏效果
-window.addEventListener('scroll', function() {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 50) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = 'none';
-    }
-});
-
-// 保存用户状态到localStorage
-function saveUserState() {
-    if (currentUser) {
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    } else {
-        localStorage.removeItem('currentUser');
-    }
-}
-
-// 监听用户状态变化
-const originalLogout = logout;
-logout = function() {
-    originalLogout();
-    saveUserState();
-};
-
-// 页面卸载时保存状态
-window.addEventListener('beforeunload', saveUserState);
+// 将样式添加到页面
+const styleElement = document.createElement('style');
+styleElement.textContent = additionalStyles;
+document.head.appendChild(styleElement);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>私途 - AI智能旅游规划平台</title>
+    <title>私途 - AI智能旅行规划</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -34,236 +34,247 @@
                 </a>
             </div>
             <div class="nav-actions">
-                <button class="btn-login" onclick="showLoginModal()">登录</button>
-                <button class="btn-register" onclick="showRegisterModal()">注册</button>
+                <span class="user-info">用户囤p650</span>
+                <button class="btn-register">签到</button>
             </div>
         </div>
     </nav>
 
     <!-- 主要内容区域 -->
     <main class="main-content">
-        <!-- 英雄区域 -->
-        <section class="hero-section">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    <span class="gradient-text">AI智能规划</span>
-                    <br>让旅行更简单
-                </h1>
-                <p class="hero-subtitle">基于AI的个性化旅游规划，为您量身定制完美旅程</p>
-                
-                <!-- AI规划快速入口 -->
-                <div class="quick-plan-card">
-                    <div class="plan-form">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <h1 class="main-title">
+                <span class="brand-name">私途</span>
+                <span class="subtitle">- AI智能旅行规划</span>
+            </h1>
+            <p class="main-description">让AI为您量身定制完美旅程，探索世界的美好</p>
+        </div>
+
+        <!-- 主要布局容器 -->
+        <div class="main-layout">
+            <!-- 左侧 AI 智能规划 -->
+            <div class="ai-planning-container">
+                <div class="ai-planning-card">
+                    <div class="card-header">
+                        <h2>AI智能规划</h2>
+                        <p>只需三步，AI为您生成专属行程</p>
+                    </div>
+
+                    <div class="planning-form">
                         <div class="form-group">
                             <label>目的地</label>
-                            <input type="text" id="destination" placeholder="请输入目的地，如：北京、上海、杭州">
+                            <input type="text" id="destination" placeholder="请输入您想去的城市或景点" class="form-input">
                         </div>
+
                         <div class="form-group">
                             <label>旅行偏好</label>
-                            <div class="preference-tags">
-                                <span class="tag active">文化古迹</span>
-                                <span class="tag">自然风光</span>
-                                <span class="tag">美食体验</span>
-                                <span class="tag">购物娱乐</span>
+                            <div class="preference-options">
+                                <div class="preference-item active" data-type="culture">文化古迹</div>
+                                <div class="preference-item" data-type="nature">自然风光</div>
+                                <div class="preference-item" data-type="food">美食体验</div>
+                                <div class="preference-item" data-type="entertainment">休闲娱乐</div>
+                                <div class="preference-item" data-type="outdoor">户外运动</div>
+                                <div class="preference-item" data-type="shopping">购物娱乐</div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label>旅行天数</label>
                             <div class="days-selector">
-                                <button class="day-btn active">3天</button>
-                                <button class="day-btn">5天</button>
-                                <button class="day-btn">7天</button>
-                                <button class="day-btn">10天</button>
+                                <div class="day-option" data-days="1">1天</div>
+                                <div class="day-option" data-days="2">2天</div>
+                                <div class="day-option active" data-days="3">3天</div>
+                                <div class="day-option" data-days="4">4天</div>
+                                <div class="day-option" data-days="5">5天</div>
+                                <div class="day-option" data-days="6">6天</div>
+                                <div class="day-option" data-days="7">7天</div>
                             </div>
                         </div>
-                        <button class="btn-primary" onclick="startAIPlanning()">
-                            <i class="fas fa-magic"></i>
+
+                        <button class="ai-plan-btn" onclick="startAIPlanning()">
+                            <i class="fas fa-edit"></i>
                             开始AI规划
                         </button>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- 推荐景点区域 -->
-        <section class="recommendations-section">
-            <div class="section-header">
-                <h2>热门推荐</h2>
-                <a href="#" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="attractions-grid">
-                <div class="attraction-card">
-                    <div class="attraction-image">
-                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="故宫">
-                        <div class="attraction-overlay">
-                            <button class="btn-favorite"><i class="fas fa-heart"></i></button>
-                        </div>
+            <!-- 右侧内容区域 -->
+            <div class="content-area">
+                <!-- 热门推荐 -->
+                <section class="recommendations-section">
+                    <div class="section-header">
+                        <h2>热门推荐</h2>
+                        <a href="#" class="view-all">查看全部 →</a>
                     </div>
-                    <div class="attraction-content">
-                        <h3>故宫博物院</h3>
-                        <p class="attraction-location"><i class="fas fa-map-marker-alt"></i> 北京</p>
-                        <div class="attraction-rating">
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                    <div class="recommendations-grid">
+                        <div class="recommendation-card">
+                            <div class="card-image">
+                                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop" alt="故宫博物院">
+                                <button class="favorite-btn"><i class="fas fa-heart"></i></button>
                             </div>
-                            <span class="rating-text">4.8 (1.2万评价)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="attraction-card">
-                    <div class="attraction-image">
-                        <img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=400&h=300&fit=crop" alt="西湖">
-                        <div class="attraction-overlay">
-                            <button class="btn-favorite"><i class="fas fa-heart"></i></button>
-                        </div>
-                    </div>
-                    <div class="attraction-content">
-                        <h3>西湖风景名胜区</h3>
-                        <p class="attraction-location"><i class="fas fa-map-marker-alt"></i> 杭州</p>
-                        <div class="attraction-rating">
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <span class="rating-text">4.9 (8.5千评价)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="attraction-card">
-                    <div class="attraction-image">
-                        <img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=400&h=300&fit=crop" alt="外滩">
-                        <div class="attraction-overlay">
-                            <button class="btn-favorite"><i class="fas fa-heart"></i></button>
-                        </div>
-                    </div>
-                    <div class="attraction-content">
-                        <h3>外滩</h3>
-                        <p class="attraction-location"><i class="fas fa-map-marker-alt"></i> 上海</p>
-                        <div class="attraction-rating">
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <span class="rating-text">4.7 (1.5万评价)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 热门帖子区域 -->
-        <section class="posts-section">
-            <div class="section-header">
-                <h2>热门分享</h2>
-                <a href="forum.html" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="posts-grid">
-                <div class="post-card">
-                    <div class="post-header">
-                        <div class="user-info">
-                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" alt="用户头像" class="user-avatar">
-                            <div class="user-details">
-                                <h4>旅行达人小王</h4>
-                                <span class="post-time">2小时前</span>
+                            <div class="card-content">
+                                <h3>故宫博物院</h3>
+                                <p class="location"><i class="fas fa-map-marker-alt"></i> 北京</p>
+                                <div class="rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span>4.8</span>
+                                </div>
                             </div>
                         </div>
-                        <button class="btn-follow">关注</button>
-                    </div>
-                    <div class="post-content">
-                        <h3>北京三日游完美攻略，避开人山人海！</h3>
-                        <p>分享一个避开人流的北京三日游路线，包含故宫、天坛、颐和园等经典景点...</p>
-                        <div class="post-images">
-                            <img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=200&h=150&fit=crop" alt="景点图片">
-                            <img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=200&h=150&fit=crop" alt="景点图片">
-                        </div>
-                    </div>
-                    <div class="post-actions">
-                        <button class="action-btn"><i class="fas fa-heart"></i> 1.2k</button>
-                        <button class="action-btn"><i class="fas fa-comment"></i> 89</button>
-                        <button class="action-btn"><i class="fas fa-share"></i> 分享</button>
-                    </div>
-                </div>
 
-                <div class="post-card">
-                    <div class="post-header">
-                        <div class="user-info">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="用户头像" class="user-avatar">
-                            <div class="user-details">
-                                <h4>美食探索者</h4>
-                                <span class="post-time">5小时前</span>
+                        <div class="recommendation-card">
+                            <div class="card-image">
+                                <img src="https://images.unsplash.com/photo-1544986581-efac024faf62?w=300&h=200&fit=crop" alt="西湖风景名胜区">
+                                <button class="favorite-btn"><i class="fas fa-heart"></i></button>
+                            </div>
+                            <div class="card-content">
+                                <h3>西湖风景名胜区</h3>
+                                <p class="location"><i class="fas fa-map-marker-alt"></i> 杭州</p>
+                                <div class="rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span>4.9</span>
+                                </div>
                             </div>
                         </div>
-                        <button class="btn-follow">关注</button>
-                    </div>
-                    <div class="post-content">
-                        <h3>杭州美食地图，本地人推荐的老字号</h3>
-                        <p>整理了杭州最地道的本地美食，从西湖醋鱼到龙井虾仁，每一道都是经典...</p>
-                        <div class="post-images">
-                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=150&fit=crop" alt="美食图片">
+
+                        <div class="recommendation-card">
+                            <div class="card-image">
+                                <img src="https://images.unsplash.com/photo-1570797197190-8e003a00c846?w=300&h=200&fit=crop" alt="外滩">
+                                <button class="favorite-btn"><i class="fas fa-heart"></i></button>
+                            </div>
+                            <div class="card-content">
+                                <h3>外滩</h3>
+                                <p class="location"><i class="fas fa-map-marker-alt"></i> 上海</p>
+                                <div class="rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span>4.7</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="post-actions">
-                        <button class="action-btn"><i class="fas fa-heart"></i> 856</button>
-                        <button class="action-btn"><i class="fas fa-comment"></i> 67</button>
-                        <button class="action-btn"><i class="fas fa-share"></i> 分享</button>
-                    </div>
-                </div>
-            </div>
-        </section>
+                </section>
 
-        <!-- 统计数据区域 -->
-        <section class="stats-section">
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
+                <!-- 热门分享 -->
+                <section class="hot-shares-section">
+                    <div class="section-header">
+                        <h2>热门分享</h2>
+                        <a href="#" class="view-all">查看全部 →</a>
                     </div>
-                    <div class="stat-content">
-                        <h3>50万+</h3>
-                        <p>活跃用户</p>
+                    <div class="shares-grid">
+                        <div class="share-card">
+                            <div class="share-header">
+                                <div class="user-info">
+                                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" alt="用户" class="user-avatar">
+                                    <div class="user-details">
+                                        <span class="username">旅行达人小王</span>
+                                        <span class="post-time">3小时前</span>
+                                    </div>
+                                </div>
+                                <button class="follow-btn">关注</button>
+                            </div>
+                            <div class="share-content">
+                                <h3>北京三日游完美攻略</h3>
+                                <p>分享一个避开人流的北京三日游路线，包含故宫、天坛、颐和园等经典景点...</p>
+                                <div class="share-images">
+                                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100&h=80&fit=crop" alt="分享图片">
+                                    <img src="https://images.unsplash.com/photo-1570797197190-8e003a00c846?w=100&h=80&fit=crop" alt="分享图片">
+                                </div>
+                            </div>
+                            <div class="share-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-heart"></i>
+                                    <span>1.2k</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>89</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="share-card">
+                            <div class="share-header">
+                                <div class="user-info">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="用户" class="user-avatar">
+                                    <div class="user-details">
+                                        <span class="username">美食探索者</span>
+                                        <span class="post-time">5小时前</span>
+                                    </div>
+                                </div>
+                                <button class="follow-btn">关注</button>
+                            </div>
+                            <div class="share-content">
+                                <h3>杭州美食地图</h3>
+                                <p>整理了杭州最地道的本地美食，从西湖醋鱼到龙井虾仁，每一道都是经典...</p>
+                                <div class="share-images">
+                                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=100&h=80&fit=crop" alt="分享图片">
+                                </div>
+                            </div>
+                            <div class="share-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-heart"></i>
+                                    <span>856</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>67</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-route"></i>
+                </section>
+
+                <!-- 平台数据 -->
+                <section class="platform-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">50万+</div>
+                            <div class="stat-label">活跃用户</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">100万+</div>
+                            <div class="stat-label">生成行程</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">5000+</div>
+                            <div class="stat-label">覆盖城市</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">4.9</div>
+                            <div class="stat-label">用户评分</div>
+                        </div>
                     </div>
-                    <div class="stat-content">
-                        <h3>100万+</h3>
-                        <p>生成行程</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>5000+</h3>
-                        <p>覆盖城市</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>4.9</h3>
-                        <p>用户评分</p>
-                    </div>
-                </div>
+                </section>
             </div>
-        </section>
+        </div>
     </main>
 
     <!-- 登录模态框 -->
@@ -283,67 +294,7 @@
                         <label>密码</label>
                         <input type="password" placeholder="请输入密码">
                     </div>
-                    <div class="form-options">
-                        <label class="checkbox-label">
-                            <input type="checkbox">
-                            <span>记住我</span>
-                        </label>
-                        <a href="#" class="forgot-password">忘记密码？</a>
-                    </div>
                     <button type="submit" class="btn-primary full-width">登录</button>
-                </form>
-                <div class="auth-divider">
-                    <span>或</span>
-                </div>
-                <div class="social-login">
-                    <button class="btn-social wechat">
-                        <i class="fab fa-weixin"></i>
-                        微信登录
-                    </button>
-                    <button class="btn-social qq">
-                        <i class="fab fa-qq"></i>
-                        QQ登录
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 注册模态框 -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>注册私途</h2>
-                <button class="close-btn" onclick="closeModal('registerModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form class="auth-form">
-                    <div class="form-group">
-                        <label>手机号</label>
-                        <input type="tel" placeholder="请输入手机号">
-                    </div>
-                    <div class="form-group">
-                        <label>验证码</label>
-                        <div class="verification-group">
-                            <input type="text" placeholder="请输入验证码">
-                            <button type="button" class="btn-verification">获取验证码</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>设置密码</label>
-                        <input type="password" placeholder="请设置密码">
-                    </div>
-                    <div class="form-group">
-                        <label>确认密码</label>
-                        <input type="password" placeholder="请再次输入密码">
-                    </div>
-                    <div class="form-options">
-                        <label class="checkbox-label">
-                            <input type="checkbox">
-                            <span>我已阅读并同意<a href="#">《用户协议》</a>和<a href="#">《隐私政策》</a></span>
-                        </label>
-                    </div>
-                    <button type="submit" class="btn-primary full-width">注册</button>
                 </form>
             </div>
         </div>
