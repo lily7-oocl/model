@@ -143,8 +143,18 @@ function startAIPlanning() {
     // 模拟AI规划过程
     setTimeout(() => {
         hideLoadingState();
-        // 跳转到AI规划页面
-        window.location.href = `plan.html?destination=${encodeURIComponent(destination)}&preferences=${selectedPreferences.join(',')}&days=${selectedDays}`;
+        // 保存规划数据到localStorage
+        const planningData = {
+            destination: destination,
+            preferences: selectedPreferences,
+            days: selectedDays,
+            startDate: new Date().toISOString().split('T')[0], // 默认今天开始
+            people: 2 // 默认2人
+        };
+        localStorage.setItem('currentItinerary', JSON.stringify(planningData));
+        
+        // 直接跳转到行程页面
+        window.location.href = 'itinerary.html';
     }, 2000);
 }
 

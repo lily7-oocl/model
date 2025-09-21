@@ -367,6 +367,7 @@ function loadItineraryData() {
     if (savedItinerary) {
         const itineraryData = JSON.parse(savedItinerary);
         updateItineraryInfo(itineraryData);
+        generateItineraryContent(itineraryData);
     }
 }
 
@@ -390,6 +391,183 @@ function updateItineraryInfo(data) {
     
     if (data.people) {
         document.getElementById('tripPeople').textContent = `${data.people}人`;
+    }
+}
+
+// 生成行程内容
+function generateItineraryContent(data) {
+    // 根据目的地和偏好生成行程
+    const itinerary = generateSampleItinerary(data.destination, data.days, data.preferences);
+    
+    // 更新每日安排显示
+    updateDailySchedule(itinerary, data.startDate);
+    
+    // 更新地图标记
+    updateMapMarkers(itinerary);
+}
+
+// 生成示例行程
+function generateSampleItinerary(destination, days, preferences) {
+    // 根据目的地生成不同的行程
+    const cityItineraries = {
+        '北京': [
+            { name: '天安门广场', time: '09:00', duration: '1小时', lat: 39.9042, lng: 116.4074 },
+            { name: '故宫博物院', time: '10:30', duration: '3小时', lat: 39.9163, lng: 116.3972 },
+            { name: '景山公园', time: '14:00', duration: '1小时', lat: 39.9256, lng: 116.3972 },
+            { name: '天坛公园', time: '09:00', duration: '2小时', lat: 39.8823, lng: 116.4066 },
+            { name: '前门大街', time: '12:00', duration: '2小时', lat: 39.8998, lng: 116.3974 },
+            { name: '王府井', time: '15:00', duration: '3小时', lat: 39.9097, lng: 116.4134 },
+            { name: '颐和园', time: '09:00', duration: '3小时', lat: 39.9999, lng: 116.2755 },
+            { name: '圆明园', time: '13:00', duration: '3小时', lat: 40.0083, lng: 116.2975 }
+        ],
+        '上海': [
+            { name: '外滩', time: '09:00', duration: '2小时', lat: 31.2397, lng: 121.4999 },
+            { name: '南京路步行街', time: '11:00', duration: '2小时', lat: 31.2359, lng: 121.4737 },
+            { name: '豫园', time: '14:00', duration: '2小时', lat: 31.2277, lng: 121.4917 },
+            { name: '东方明珠', time: '09:00', duration: '2小时', lat: 31.2397, lng: 121.4999 },
+            { name: '上海博物馆', time: '11:00', duration: '2小时', lat: 31.2277, lng: 121.4917 },
+            { name: '田子坊', time: '14:00', duration: '2小时', lat: 31.2277, lng: 121.4917 }
+        ],
+        '杭州': [
+            { name: '西湖', time: '09:00', duration: '3小时', lat: 30.2741, lng: 120.1551 },
+            { name: '断桥残雪', time: '12:00', duration: '1小时', lat: 30.2741, lng: 120.1551 },
+            { name: '雷峰塔', time: '14:00', duration: '2小时', lat: 30.2741, lng: 120.1551 },
+            { name: '灵隐寺', time: '09:00', duration: '2小时', lat: 30.2741, lng: 120.1551 },
+            { name: '飞来峰', time: '11:00', duration: '1小时', lat: 30.2741, lng: 120.1551 },
+            { name: '龙井村', time: '14:00', duration: '2小时', lat: 30.2741, lng: 120.1551 }
+        ]
+    };
+    
+    const attractions = cityItineraries[destination] || cityItineraries['北京'];
+    const dailyAttractions = Math.ceil(attractions.length / days);
+    
+    const itinerary = [];
+    for (let day = 1; day <= days; day++) {
+        const dayAttractions = attractions.slice((day - 1) * dailyAttractions, day * dailyAttractions);
+        itinerary.push({
+            day: day,
+            attractions: dayAttractions
+        });
+    }
+    
+    return itinerary;
+}
+
+// 更新每日安排显示
+function updateDailySchedule(itinerary, startDate) {
+    const timeline = document.querySelector('.timeline');
+    if (!timeline) return;
+    
+    // 清空现有内容
+    timeline.innerHTML = '';
+    
+    itinerary.forEach((dayData, index) => {
+        const dayElement = document.createElement('div');
+        dayElement.className = `timeline-day ${index === 0 ? 'active' : ''}`;
+        dayElement.setAttribute('data-day', dayData.day);
+        
+        const currentDate = new Date(startDate);
+        currentDate.setDate(currentDate.getDate() + index);
+        
+        const dayTitle = dayData.attractions.map(att => att.name).join(' → ');
+        const totalDuration = dayData.attractions.reduce((total, att) => {
+            return total + parseInt(att.duration);
+        }, 0);
+        
+        dayElement.innerHTML = `
+            <div class="day-header" onclick="toggleDay(${dayData.day})">
+                <div class="day-info">
+                    <span class="day-number">第${dayData.day}天</span>
+                    <span class="day-date">${currentDate.toLocaleDateString('zh-CN')}</span>
+                </div>
+                <div class="day-summary">
+                    <span class="day-title">${dayTitle}</span>
+                    <span class="day-duration">${totalDuration}小时</span>
+                </div>
+                <i class="fas fa-chevron-down day-toggle"></i>
+            </div>
+            
+            <div class="day-content">
+                ${dayData.attractions.map((attraction, attIndex) => `
+                    <div class="timeline-item" data-attraction="${attraction.name}">
+                        <div class="item-time">${attraction.time}</div>
+                        <div class="item-marker">
+                            <div class="marker-dot"></div>
+                            ${attIndex < dayData.attractions.length - 1 ? '<div class="marker-line"></div>' : ''}
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">${attraction.name}</div>
+                            <div class="item-description">根据您的偏好精心挑选的景点</div>
+                            <div class="item-duration">预计停留：${attraction.duration}</div>
+                            <div class="item-actions">
+                                <button class="btn-small" onclick="viewAttractionDetails('${attraction.name}')">
+                                    <i class="fas fa-info-circle"></i>
+                                    详情
+                                </button>
+                                <button class="btn-small" onclick="navigateToAttraction('${attraction.name}')">
+                                    <i class="fas fa-directions"></i>
+                                    导航
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        
+        timeline.appendChild(dayElement);
+    });
+}
+
+// 更新地图标记
+function updateMapMarkers(itinerary) {
+    // 清除现有标记
+    attractionMarkers.forEach(marker => map.removeLayer(marker));
+    attractionMarkers = [];
+    
+    // 添加新标记
+    const allAttractions = [];
+    itinerary.forEach(day => {
+        day.attractions.forEach(attraction => {
+            allAttractions.push(attraction);
+        });
+    });
+    
+    allAttractions.forEach((attraction, index) => {
+        const marker = L.marker([attraction.lat, attraction.lng], {
+            icon: L.divIcon({
+                className: 'attraction-marker',
+                html: `<div style="background: #3DB2FF; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">${index + 1}</div>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            })
+        }).addTo(map);
+        
+        marker.on('click', function() {
+            showAttractionDetails(attraction.name);
+            highlightTimelineItem(attraction.name);
+        });
+        
+        attractionMarkers.push(marker);
+    });
+    
+    // 绘制路线
+    if (routePolyline) {
+        map.removeLayer(routePolyline);
+    }
+    
+    const coordinates = allAttractions.map(attraction => [attraction.lat, attraction.lng]);
+    routePolyline = L.polyline(coordinates, {
+        color: '#3DB2FF',
+        weight: 4,
+        opacity: 0.8,
+        dashArray: '10, 5'
+    }).addTo(map);
+    
+    // 调整地图视野
+    if (coordinates.length > 0) {
+        const group = new L.featureGroup(attractionMarkers);
+        map.fitBounds(group.getBounds().pad(0.1));
     }
 }
 
